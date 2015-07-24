@@ -252,3 +252,10 @@ fstype_is_pseudofs() {
 fstype_has_fsck() {
   (( fsck_types["$1"] ))
 }
+
+canonicalize_path() {
+  local r
+
+  r=$(realpath -mL "${!1}") || return 1
+  printf -v "$1" '%s' "$r"
+}

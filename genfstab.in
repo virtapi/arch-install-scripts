@@ -121,9 +121,8 @@ shift $(( OPTIND - 1 ))
 (( $# )) || die "No root directory specified"
 root=$1; shift
 
-if ! mountpoint -q "$root"; then
-  die "$root is not a mountpoint"
-fi
+mountpoint -q "$root" || die "%s is not a mountpoint" "$root"
+canonicalize_path 'root' || die "failed to canonicalize path %s" "$root"
 
 # handle block devices
 findmnt -Recvruno SOURCE,TARGET,FSTYPE,OPTIONS,FSROOT "$root" |

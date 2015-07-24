@@ -1,0 +1,44 @@
+#!/bin/bash
+
+. "${1:-./common}"
+. ./test/common
+
+in=/
+canonicalize_path 'in'
+ASSERT_streq "$in" /
+
+in=//
+canonicalize_path 'in'
+ASSERT_streq "$in" /
+
+in=/foo
+canonicalize_path 'in'
+ASSERT_streq "$in" /foo
+
+in=//foo
+canonicalize_path 'in'
+ASSERT_streq "$in" /foo
+
+in=/foo/bar/../
+canonicalize_path 'in'
+ASSERT_streq "$in" /foo
+
+in=/foo/bar/./baz/
+canonicalize_path 'in'
+ASSERT_streq "$in" /foo/bar/baz
+
+in=foo/bar
+canonicalize_path 'in'
+ASSERT_streq "$in" "$PWD"/foo/bar
+
+in=/foo/bar/../baz
+canonicalize_path 'in'
+ASSERT_streq "$in" /foo/baz
+
+in=/foo/bar/../../
+canonicalize_path 'in'
+ASSERT_streq "$in" /
+
+in=/foo/bar/../../../../
+canonicalize_path 'in'
+ASSERT_streq "$in" /
